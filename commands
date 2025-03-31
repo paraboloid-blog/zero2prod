@@ -1,0 +1,14 @@
+export DATABASE_URL=postgres://postgres:password@127.0.0.1:5432/newsletter
+sqlx migrate add create_subscriptions_table
+curl http://127.0.0.1:8000/health_check -v
+curl -i -X POST -d 'email=thomas_mann@hotmail.com&name=Tom' http://127.0.0.1:8000/subscriptions
+RUST_LOG=trace cargo run 2>&1 | fzf --tac --preview-window="right:30%,wrap" --preview "echo {} | jq -R 'try fromjson catch .'"
+TEST_LOG=X cargo test health_check_works | bunyan 
+
+Postgres:
+> \dt (show tables)
+> \t  (show databases)
+
+Crates:
+env_logger
+
