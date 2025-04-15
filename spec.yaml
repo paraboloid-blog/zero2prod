@@ -1,4 +1,3 @@
-#! spec.yaml
 name: zero2prod
 # Check https://www.digitalocean.com/docs/app-platform/#regional-availability
 # for a list of all the available options.
