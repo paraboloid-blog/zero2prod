@@ -37,8 +37,12 @@ impl EmailClient {
         let url = format!("{}/v1/email", self.base_url);
 
         let request_body = SendEmailRequest {
-            from: self.sender.as_ref(),
-            to: recipient.as_ref(),
+            from: EmailObject {
+                email: self.sender.as_ref(),
+            },
+            to: vec![EmailObject {
+                email: recipient.as_ref(),
+            }],
             subject,
             html: html_content,
             text: text_content,
@@ -49,21 +53,28 @@ impl EmailClient {
             .post(&url)
             .header(
                 "Authorization",
-                format!("Bearer '{}'", self.authorization_token.expose_secret()),
+                format!("Bearer {}", self.authorization_token.expose_secret()),
             )
             .json(&request_body)
             .send()
             .await?
             .error_for_status()?;
+
         Ok(())
     }
 }
 
 #[derive(serde::Serialize)]
 #[serde(rename_all = "lowercase")]
+struct EmailObject<'a> {
+    email: &'a str,
+}
+
+#[derive(serde::Serialize)]
+#[serde(rename_all = "lowercase")]
 struct SendEmailRequest<'a> {
-    from: &'a str,
-    to: &'a str,
+    from: EmailObject<'a>,
+    to: Vec<EmailObject<'a>>,
     subject: &'a str,
     html: &'a str,
     text: &'a str,
