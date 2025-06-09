@@ -3,7 +3,6 @@ use validator::ValidateEmail;
 #[derive(Debug)]
 pub struct SubscriberEmail(String);
 
-#[allow(dead_code)]
 impl SubscriberEmail {
     pub fn parse(s: String) -> Result<SubscriberEmail, String> {
         if s.as_email_string().validate_email() {
