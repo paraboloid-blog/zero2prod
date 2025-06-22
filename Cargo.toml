@@ -24,7 +24,7 @@ tracing-actix-web = "0.7.18"
 tokio = { version = "1.45.1", features = ["macros", "rt-multi-thread"] }
 serde = { version = "1.0.219", features = ["derive"] }
 serde-aux = "4.7.0"
-uuid = { version = "1.17.0", features = ["v4"] }
+uuid = { version = "1.17.0", features = ["v4", "serde"] }
 chrono = { version = "0.4.41", default-features = false, features = ["clock"] }
 secrecy = { version = "0.10.3", features = ["serde"] }
 unicode-segmentation = "1.12.0"
