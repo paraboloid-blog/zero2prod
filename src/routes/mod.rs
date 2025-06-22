@@ -1,3 +1,4 @@
+mod admin;
 mod greet;
 mod health_check;
 mod home;
@@ -6,6 +7,7 @@ mod newsletter;
 mod subscriptions;
 mod subscriptions_confirm;
 
+pub use admin::*;
 pub use greet::*;
 pub use health_check::*;
 pub use home::*;
