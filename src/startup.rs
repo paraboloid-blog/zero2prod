@@ -28,7 +28,7 @@ pub struct Application {
 }
 
 impl Application {
-    pub async fn build(configuration: Settings) -> Result<Self, anyhow::Error> {
+    pub async fn build(configuration: Settings) -> anyhow::Result<Self> {
         let connection_pool = get_connection_pool(&configuration.database);
 
         let email_client = configuration.email_client.client();
@@ -77,7 +77,7 @@ pub async fn run(
     base_url: String,
     hmac_secret: SecretString,
     redis_uri: SecretString,
-) -> Result<Server, anyhow::Error> {
+) -> anyhow::Result<Server> {
     let db_pool = Data::new(db_pool);
     let email_client = Data::new(email_client);
     let base_url = Data::new(ApplicationBaseUrl(base_url));

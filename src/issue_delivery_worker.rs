@@ -22,14 +22,14 @@ pub enum ExecutionOutcome {
     EmptyQueue,
 }
 
-pub async fn run_worker_until_stopped(configuration: Settings) -> Result<(), anyhow::Error> {
+pub async fn run_worker_until_stopped(configuration: Settings) -> anyhow::Result<()> {
     let connection_pool = get_connection_pool(&configuration.database);
     let email_client = configuration.email_client.client();
 
     worker_loop(connection_pool, email_client).await
 }
 
-async fn worker_loop(pool: PgPool, email_client: EmailClient) -> Result<(), anyhow::Error> {
+async fn worker_loop(pool: PgPool, email_client: EmailClient) -> anyhow::Result<()> {
     loop {
         match try_execute_task(&pool, &email_client).await {
             Ok(ExecutionOutcome::EmptyQueue) => {
@@ -53,7 +53,7 @@ async fn worker_loop(pool: PgPool, email_client: EmailClient) -> Result<(), anyh
 pub async fn try_execute_task(
     pool: &PgPool,
     email_client: &EmailClient,
-) -> Result<ExecutionOutcome, anyhow::Error> {
+) -> anyhow::Result<ExecutionOutcome> {
     let task = dequeue_task(pool).await?;
 
     if task.is_none() {
@@ -103,7 +103,7 @@ pub async fn try_execute_task(
 }
 
 #[tracing::instrument(skip_all)]
-async fn get_issue(pool: &PgPool, issue_id: Uuid) -> Result<NewsletterIssue, anyhow::Error> {
+async fn get_issue(pool: &PgPool, issue_id: Uuid) -> anyhow::Result<NewsletterIssue> {
     let issue = sqlx::query_as!(
         NewsletterIssue,
         r#"SELECT title, text_content, html_content 
@@ -117,9 +117,7 @@ async fn get_issue(pool: &PgPool, issue_id: Uuid) -> Result<NewsletterIssue, any
 }
 
 #[tracing::instrument(skip_all)]
-async fn dequeue_task(
-    pool: &PgPool,
-) -> Result<Option<(PgTransaction, Uuid, String)>, anyhow::Error> {
+async fn dequeue_task(pool: &PgPool) -> anyhow::Result<Option<(PgTransaction, Uuid, String)>> {
     let mut transaction = pool.begin().await?;
 
     let r = sqlx::query!(
@@ -145,7 +143,7 @@ async fn delete_task(
     mut transaction: PgTransaction,
     issue_id: Uuid,
     email: &str,
-) -> Result<(), anyhow::Error> {
+) -> anyhow::Result<()> {
     sqlx::query!(
         r#"DELETE FROM issue_delivery_queue WHERE newsletter_issue_id = $1 AND subscriber_email = $2"#,
         issue_id,

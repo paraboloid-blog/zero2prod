@@ -51,7 +51,7 @@ pub async fn validate_credentials(
 async fn get_stored_credentials(
     username: &str,
     pool: &PgPool,
-) -> Result<Option<(uuid::Uuid, SecretString)>, anyhow::Error> {
+) -> anyhow::Result<Option<(uuid::Uuid, SecretString)>> {
     let row = sqlx::query!(
         r#"SELECT user_id, password_hash FROM users WHERE username = $1"#,
         username,
@@ -89,7 +89,7 @@ pub async fn change_password(
     user_id: uuid::Uuid,
     password: SecretString,
     pool: &PgPool,
-) -> Result<(), anyhow::Error> {
+) -> anyhow::Result<()> {
     let password_hash = spawn_blocking_with_tracing(move || compute_password_hash(password))
         .await?
         .context("Failed to hash password")?;
@@ -106,7 +106,7 @@ pub async fn change_password(
     Ok(())
 }
 
-fn compute_password_hash(password: SecretString) -> Result<SecretString, anyhow::Error> {
+fn compute_password_hash(password: SecretString) -> anyhow::Result<SecretString> {
     let salt = SaltString::generate(&mut OsRng);
     let password_hash = Argon2::new(
         Algorithm::Argon2id,

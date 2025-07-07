@@ -22,7 +22,7 @@ pub async fn try_processing(
     pool: &PgPool,
     idempotency_key: &IdempotencyKey,
     user_id: Uuid,
-) -> Result<NextAction, anyhow::Error> {
+) -> anyhow::Result<NextAction> {
     let mut transaction = pool.begin().await?;
 
     // transaction
@@ -57,7 +57,7 @@ pub async fn get_saved_response(
     pool: &PgPool,
     idempotency_key: &IdempotencyKey,
     user_id: Uuid,
-) -> Result<Option<HttpResponse>, anyhow::Error> {
+) -> anyhow::Result<Option<HttpResponse>> {
     let saved_response = sqlx::query!(
         r#"SELECT 
         response_status_code as "response_status_code!", 
@@ -90,7 +90,7 @@ pub async fn save_response(
     idempotency_key: &IdempotencyKey,
     user_id: Uuid,
     http_response: HttpResponse,
-) -> Result<HttpResponse, anyhow::Error> {
+) -> anyhow::Result<HttpResponse> {
     let (response_head, body) = http_response.into_parts();
 
     let body = to_bytes(body).await.map_err(|e| anyhow::anyhow!("{}", e))?;
