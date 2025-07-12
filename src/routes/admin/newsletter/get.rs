@@ -5,7 +5,7 @@ use std::fmt::Write;
 
 pub async fn publish_newsletter_form(
     flash_messages: IncomingFlashMessages,
-) -> Result<HttpResponse, actix_web::Error> {
+) -> actix_web::Result<HttpResponse> {
     let mut msg_html = String::new();
 
     for m in flash_messages.iter() {

@@ -29,7 +29,7 @@ impl Deref for UserId {
 pub async fn reject_anonymous_users(
     mut req: ServiceRequest,
     next: Next<impl MessageBody>,
-) -> Result<ServiceResponse<impl MessageBody>, actix_web::Error> {
+) -> actix_web::Result<ServiceResponse<impl MessageBody>> {
     let session = {
         let (http_request, payload) = req.parts_mut();
         TypedSession::from_request(http_request, payload).await

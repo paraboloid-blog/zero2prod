@@ -8,7 +8,7 @@ use std::fmt::Write;
 pub async fn change_password_form(
     session: TypedSession,
     flash_messages: IncomingFlashMessages,
-) -> Result<HttpResponse, actix_web::Error> {
+) -> actix_web::Result<HttpResponse> {
     if session.get_user_id().map_err(e500)?.is_none() {
         return Ok(see_other("/login"));
     };

@@ -25,7 +25,7 @@ pub async fn publish_newsletter(
     form: web::Form<FormData>,
     pool: web::Data<PgPool>,
     user_id: ReqData<UserId>,
-) -> Result<HttpResponse, actix_web::Error> {
+) -> actix_web::Result<HttpResponse> {
     let user_id = user_id.into_inner();
     let FormData {
         title,
