@@ -1,0 +1,34 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "SELECT title, text_content, html_content \n           FROM newsletter_issues WHERE newsletter_issue_id = $1",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 1,
+        "name": "text_content",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 2,
+        "name": "html_content",
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false
+    ]
+  },
+  "hash": "e5543ab580a8501c3e7eea209f71bd43973eed1ff3f78d6250778b15b31381ba"
+}
